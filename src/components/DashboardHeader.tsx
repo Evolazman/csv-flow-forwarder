@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export const DashboardHeader = () => {
   return (
@@ -10,6 +11,12 @@ export const DashboardHeader = () => {
         </div>
         
         <div className="flex items-center space-x-4">
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/">Home</Link>
+          </Button>
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/dashboard">Dashboard</Link>
+          </Button>
           <Button variant="outline" size="sm">
             Documentation
           </Button>
