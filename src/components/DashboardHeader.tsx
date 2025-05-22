@@ -17,8 +17,8 @@ export const DashboardHeader = () => {
           <Button variant="ghost" size="sm" asChild>
             <Link to="/dashboard">Dashboard</Link>
           </Button>
-          <Button variant="outline" size="sm">
-            Documentation
+          <Button variant="outline" size="sm" asChild>
+            <a href="#" target="_blank" rel="noopener noreferrer">Documentation</a>
           </Button>
         </div>
       </div>

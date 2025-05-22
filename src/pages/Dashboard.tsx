@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,35 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid 
 } from "recharts";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useReactToPdf } from "react-to-pdf";
+import { Download } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
 
 const Dashboard = () => {
   const [currentProject, setCurrentProject] = useState("CP land");
   const [currentDate, setCurrentDate] = useState("16/05/2023");
+  const dashboardRef = useRef<HTMLDivElement>(null);
+  
+  // PDF generation hook
+  const { toPdf, targetRef } = useReactToPdf({
+    filename: `dashboard-${currentProject}-${currentDate}.pdf`,
+    options: {
+      format: 'a4',
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Dashboard exported to PDF successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to export dashboard",
+        variant: "destructive",
+      });
+    },
+  });
   
   // Mock data for charts
   const pieData = [
@@ -23,7 +48,19 @@ const Dashboard = () => {
     { name: "User 6", value: 5 },
   ];
   
+  const resultData = [
+    { name: "Success", value: 68 },
+    { name: "Failure", value: 32 },
+  ];
+  
+  const asrData = [
+    { name: "Accurate", value: 68 },
+    { name: "Errors", value: 32 },
+  ];
+  
   const COLORS = ['#FF8042', '#FFBB28', '#00C49F', '#0088FE', '#8884d8', '#82ca9d'];
+  const RESULT_COLORS = ['#4CAF50', '#FF5252'];
+  const ASR_COLORS = ['#2196F3', '#FFC107'];
   
   const errorFeedbackData = [
     { count: 20, problem: "Navigation issue in main menu" },
@@ -38,17 +75,23 @@ const Dashboard = () => {
     { name: "Case D", value: 30 },
   ];
 
+  const handleExport = () => {
+    toPdf();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <DashboardHeader />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8" ref={targetRef}>
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Project: {currentProject}</h1>
             <p className="text-sm text-muted-foreground">{currentDate}</p>
           </div>
-          <Button variant="outline">Export</Button>
+          <Button variant="outline" onClick={handleExport}>
+            <Download className="mr-2 h-4 w-4" /> Export PDF
+          </Button>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -144,13 +187,29 @@ const Dashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center">
-              <div className="w-36 h-36 rounded-full border-2 border-gray-200 flex items-center justify-center">
-                <span className="text-4xl text-orange-500 font-bold">?</span>
+              <div className="w-36 h-36">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={resultData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={50}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {resultData.map((entry, index) => (
+                        <Cell key={`result-cell-${index}`} fill={RESULT_COLORS[index % RESULT_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `${value}%`} />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
               <div className="mt-4 space-y-2">
-                <Button variant="outline" size="sm" className="w-full">Comment</Button>
-                <Button variant="outline" size="sm" className="w-full">Comment</Button>
-                <Button variant="outline" size="sm" className="w-full">Comment</Button>
+                <Button variant="outline" size="sm" className="w-full">Success: 68%</Button>
+                <Button variant="outline" size="sm" className="w-full">Failure: 32%</Button>
               </div>
             </CardContent>
           </Card>
@@ -163,13 +222,29 @@ const Dashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center">
-              <div className="w-36 h-36 rounded-full border-2 border-gray-200 flex items-center justify-center">
-                <span className="text-4xl text-orange-500 font-bold">?</span>
+              <div className="w-36 h-36">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={asrData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={50}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {asrData.map((entry, index) => (
+                        <Cell key={`asr-cell-${index}`} fill={ASR_COLORS[index % ASR_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `${value}%`} />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
               <div className="mt-4 space-y-2">
-                <Button variant="outline" size="sm" className="w-full">Comment</Button>
-                <Button variant="outline" size="sm" className="w-full">Comment</Button>
-                <Button variant="outline" size="sm" className="w-full">Comment</Button>
+                <Button variant="outline" size="sm" className="w-full">Accurate: 68%</Button>
+                <Button variant="outline" size="sm" className="w-full">Errors: 32%</Button>
               </div>
             </CardContent>
           </Card>
