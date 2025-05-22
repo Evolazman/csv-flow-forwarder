@@ -15,28 +15,10 @@ const Dashboard = () => {
   const [currentDate, setCurrentDate] = useState("16/05/2023");
   const targetRef = useRef<HTMLDivElement>(null);
   
-  // PDF generation hook - fixed the options object to match the library's types
+  // PDF generation hook with correct implementation
   const { toPDF } = usePDF({
     filename: `dashboard-${currentProject}-${currentDate}.pdf`,
-    page: {
-      // Using page option instead of options.format
-      format: 'a4'
-    },
-    // targetRef is a direct property, not part of options
-    targetRef: targetRef,
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Dashboard exported to PDF successfully",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to export dashboard",
-        variant: "destructive",
-      });
-    },
+    page: { format: 'a4' }
   });
   
   // Mock data for charts
@@ -77,7 +59,20 @@ const Dashboard = () => {
   ];
 
   const handleExport = () => {
-    toPDF();
+    if (targetRef.current) {
+      toPDF(targetRef);
+      
+      toast({
+        title: "Success",
+        description: "Dashboard exported to PDF successfully",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to export dashboard",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
