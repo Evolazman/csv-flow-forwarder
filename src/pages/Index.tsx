@@ -1,12 +1,45 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState } from "react";
+import { FileUploader } from "@/components/FileUploader";
+import { WebhookForm } from "@/components/WebhookForm";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { FileDetails } from "@/components/FileDetails";
 
 const Index = () => {
+  const [file, setFile] = useState<File | null>(null);
+  
+  const handleFileSelect = (selectedFile: File) => {
+    setFile(selectedFile);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <DashboardHeader />
+      
+      <main className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6">CSV File Upload</h2>
+            
+            <FileUploader onFileSelect={handleFileSelect} />
+            
+            {file && (
+              <>
+                <div className="my-6">
+                  <FileDetails file={file} />
+                </div>
+                <WebhookForm file={file} />
+              </>
+            )}
+            
+            {!file && (
+              <div className="mt-6 text-center text-gray-500">
+                <p>Upload a CSV file to continue</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
