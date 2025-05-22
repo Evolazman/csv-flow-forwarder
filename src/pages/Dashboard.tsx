@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { Button } from "@/components/ui/button";
@@ -16,13 +15,15 @@ const Dashboard = () => {
   const [currentDate, setCurrentDate] = useState("16/05/2023");
   const targetRef = useRef<HTMLDivElement>(null);
   
-  // PDF generation hook - fixed the import
+  // PDF generation hook - fixed the options object to match the library's types
   const { toPDF } = usePDF({
-    targetRef,
     filename: `dashboard-${currentProject}-${currentDate}.pdf`,
-    options: {
-      format: 'a4',
+    page: {
+      // Using page option instead of options.format
+      format: 'a4'
     },
+    // targetRef is a direct property, not part of options
+    targetRef: targetRef,
     onSuccess: () => {
       toast({
         title: "Success",
