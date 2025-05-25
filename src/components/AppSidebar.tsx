@@ -1,5 +1,5 @@
 
-import { Home, BarChart3, FileText, Settings } from "lucide-react";
+import { Home, BarChart3, FileText, Settings, Upload } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -19,6 +19,11 @@ const menuItems = [
     title: "Home",
     url: "/",
     icon: Home,
+  },
+  {
+    title: "File Manager",
+    url: "/",
+    icon: Upload,
   },
   {
     title: "Dashboard",
@@ -72,4 +77,4 @@ export function AppSidebar() {
       </SidebarContent>
     </Sidebar>
   );
-}
+};

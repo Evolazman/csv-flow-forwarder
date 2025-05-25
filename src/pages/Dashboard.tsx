@@ -19,7 +19,20 @@ const Dashboard = () => {
   // PDF generation hook with correct implementation
   const { toPDF } = usePDF({
     filename: `dashboard-${currentProject}-${currentDate}.pdf`,
-    page: { format: 'a4' }
+    page: { format: 'a4' },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Dashboard exported to PDF successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to export dashboard",
+        variant: "destructive",
+      });
+    }
   });
   
   // Mock data for charts
@@ -62,11 +75,6 @@ const Dashboard = () => {
   const handleExport = () => {
     if (targetRef.current) {
       toPDF(targetRef.current);
-      
-      toast({
-        title: "Success",
-        description: "Dashboard exported to PDF successfully",
-      });
     } else {
       toast({
         title: "Error",
