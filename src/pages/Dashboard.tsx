@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import { DashboardHeader } from "@/components/DashboardHeader";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { UserTesterChart } from "@/components/dashboard/UserTesterChart";
@@ -9,6 +8,8 @@ import { TestCaseChart } from "@/components/dashboard/TestCaseChart";
 import { ErrorFeedbackTable } from "@/components/dashboard/ErrorFeedbackTable";
 import { DashboardHeaderContent } from "@/components/dashboard/DashboardHeader";
 import { usePDF } from "react-to-pdf";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 
 const Dashboard = () => {
   const [currentProject, setCurrentProject] = useState("CP land");
@@ -60,7 +61,7 @@ const Dashboard = () => {
 
   const handleExport = () => {
     if (targetRef.current) {
-      toPDF(targetRef);
+      toPDF(targetRef.current);
       
       toast({
         title: "Success",
@@ -76,53 +77,56 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <DashboardHeader />
-      
-      <main className="container mx-auto px-4 py-8" ref={targetRef}>
-        <DashboardHeaderContent 
-          projectName={currentProject} 
-          date={currentDate}
-          onExport={handleExport}
-        />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* First row */}
-          <div className="md:col-span-1">
-            <UserTesterChart data={pieData} colors={COLORS} />
-          </div>
-          
-          <div className="md:col-span-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-              <StatCard title="Success Rate" value="68%" subValue="16/20" />
-              <StatCard title="Error rate Count" value="5%" subValue="15/300" />
-              <StatCard title="Duration time" value="00:20" subValue="Max: 01:55min" />
-              <StatCard title="ASR" value="68%" subValue="16/20" />
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <AppSidebar />
+        <SidebarInset>
+          <main className="container mx-auto px-4 py-8" ref={targetRef}>
+            <DashboardHeaderContent 
+              projectName={currentProject} 
+              date={currentDate}
+              onExport={handleExport}
+            />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* First row */}
+              <div className="md:col-span-1">
+                <UserTesterChart data={pieData} colors={COLORS} />
+              </div>
+              
+              <div className="md:col-span-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+                  <StatCard title="Success Rate" value="68%" subValue="16/20" />
+                  <StatCard title="Error rate Count" value="5%" subValue="15/300" />
+                  <StatCard title="Duration time" value="00:20" subValue="Max: 01:55min" />
+                  <StatCard title="ASR" value="68%" subValue="16/20" />
+                </div>
+              </div>
+              
+              {/* Second row */}
+              <ResultChart 
+                title="Result" 
+                data={resultData} 
+                colors={RESULT_COLORS} 
+                buttonLabels={["Success: 68%", "Failure: 32%"]} 
+              />
+              
+              <ResultChart 
+                title="ASR" 
+                data={asrData} 
+                colors={ASR_COLORS} 
+                buttonLabels={["Accurate: 68%", "Errors: 32%"]} 
+              />
+              
+              <TestCaseChart data={testCaseData} />
+              
+              {/* Third row - Error feedback */}
+              <ErrorFeedbackTable data={errorFeedbackData} />
             </div>
-          </div>
-          
-          {/* Second row */}
-          <ResultChart 
-            title="Result" 
-            data={resultData} 
-            colors={RESULT_COLORS} 
-            buttonLabels={["Success: 68%", "Failure: 32%"]} 
-          />
-          
-          <ResultChart 
-            title="ASR" 
-            data={asrData} 
-            colors={ASR_COLORS} 
-            buttonLabels={["Accurate: 68%", "Errors: 32%"]} 
-          />
-          
-          <TestCaseChart data={testCaseData} />
-          
-          {/* Third row - Error feedback */}
-          <ErrorFeedbackTable data={errorFeedbackData} />
-        </div>
-      </main>
-    </div>
+          </main>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
   );
 };
 
