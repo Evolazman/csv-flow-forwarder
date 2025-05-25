@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
@@ -8,7 +7,7 @@ import { ResultChart } from "@/components/dashboard/ResultChart";
 import { TestCaseChart } from "@/components/dashboard/TestCaseChart";
 import { ErrorFeedbackTable } from "@/components/dashboard/ErrorFeedbackTable";
 import { DashboardHeaderContent } from "@/components/dashboard/DashboardHeader";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 
 const Dashboard = () => {
@@ -65,6 +64,12 @@ const Dashboard = () => {
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <SidebarInset>
+          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+            <SidebarTrigger className="-ml-1" />
+            <div className="flex-1">
+              <h1 className="text-lg font-semibold">Dashboard</h1>
+            </div>
+          </header>
           <main className="container mx-auto px-4 py-8" ref={targetRef}>
             <DashboardHeaderContent 
               projectName={currentProject} 

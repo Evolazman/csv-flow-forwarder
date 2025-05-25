@@ -4,7 +4,7 @@ import { FileUploader } from "@/components/FileUploader";
 import { WebhookForm } from "@/components/WebhookForm";
 import { FileDetails } from "@/components/FileDetails";
 import { FileManager } from "@/components/FileManager";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 
 const Index = () => {
@@ -19,6 +19,12 @@ const Index = () => {
       <div className="min-h-screen flex w-full bg-gray-50">
         <AppSidebar />
         <SidebarInset>
+          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+            <SidebarTrigger className="-ml-1" />
+            <div className="flex-1">
+              <h1 className="text-lg font-semibold">CSV File Upload</h1>
+            </div>
+          </header>
           <main className="container mx-auto px-4 py-8">
             <div className="max-w-6xl mx-auto space-y-6">
               <div className="bg-white shadow-md rounded-lg p-6">
