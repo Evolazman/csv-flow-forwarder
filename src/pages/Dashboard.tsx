@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
@@ -7,7 +8,6 @@ import { ResultChart } from "@/components/dashboard/ResultChart";
 import { TestCaseChart } from "@/components/dashboard/TestCaseChart";
 import { ErrorFeedbackTable } from "@/components/dashboard/ErrorFeedbackTable";
 import { DashboardHeaderContent } from "@/components/dashboard/DashboardHeader";
-import { usePDF } from "react-to-pdf";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 
@@ -15,25 +15,6 @@ const Dashboard = () => {
   const [currentProject, setCurrentProject] = useState("CP land");
   const [currentDate, setCurrentDate] = useState("16/05/2023");
   const targetRef = useRef<HTMLDivElement>(null);
-  
-  // PDF generation hook with correct implementation
-  const { toPDF } = usePDF({
-    filename: `dashboard-${currentProject}-${currentDate}.pdf`,
-    page: { format: 'a4' },
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Dashboard exported to PDF successfully",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to export dashboard",
-        variant: "destructive",
-      });
-    }
-  });
   
   // Mock data for charts
   const pieData = [
@@ -73,15 +54,10 @@ const Dashboard = () => {
   ];
 
   const handleExport = () => {
-    if (targetRef.current) {
-      toPDF(targetRef.current);
-    } else {
-      toast({
-        title: "Error",
-        description: "Failed to export dashboard",
-        variant: "destructive",
-      });
-    }
+    toast({
+      title: "Export",
+      description: "Export functionality would be implemented here",
+    });
   };
 
   return (
